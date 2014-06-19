@@ -34,6 +34,3 @@ http.get("http://www.google.com", new HttpResponder() {
 ```
 The callback function ``onHttpResponse`` returns a ``ServerResponse`` object which contains all the necessary details of the server response. Any Android error, such as WiFi connection errors, will throw an ``AndroidErrorException`` or something like that. Be sure to handle any exception that might be thrown.
 
----
-DataConnect
----
