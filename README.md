@@ -1,7 +1,5 @@
 #Simple Connect
-Things are meant to be simple...
 
----
 ###Usage
 Download the ``http-connect.jar`` file from the project root directory and add it to build path and boom! Now you should be able to simple connect to various android services. Read the rest of the this documentation to find out more about utilizing this convenience library.
 
