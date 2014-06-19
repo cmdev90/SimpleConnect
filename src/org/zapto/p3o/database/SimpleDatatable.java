@@ -30,7 +30,7 @@ public class SimpleDatatable {
 
 	private DatabaseHelper database;
 
-	public SimpleDatatable(String tablename) {
+	protected SimpleDatatable(String tablename) {
 		this.tablename = tablename;
 		this.columns = new HashMap<String, String>();
 	}

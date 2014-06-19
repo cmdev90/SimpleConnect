@@ -7,6 +7,7 @@ import org.zapto.p3o.database.QueryListener;
 import org.zapto.p3o.database.QueryResult;
 import org.zapto.p3o.database.SimpleDatabase;
 import org.zapto.p3o.database.SimpleDatatable;
+import org.zapto.p3o.database.TableNotFoundException;
 import org.zapto.p3o.http.ConnectionErrorException;
 import org.zapto.p3o.http.HttpResponder;
 import org.zapto.p3o.http.RequestMaker;
@@ -31,9 +32,9 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		this.testDatabase();
-		
+
 		try {
 			this.testHttp();
 		} catch (ConnectionErrorException e) {
@@ -157,14 +158,12 @@ public class MainActivity extends ActionBarActivity {
 	 */
 	protected void testDatabase() {
 
-		// Create a sample table and add a column to it.
-		SimpleDatatable table = new SimpleDatatable("sample_table");
-		table.addColumn("id", SimpleDatatable.INTEGER);
-
 		// Create a new database and add the created table to it. If the
 		// database already exist these calls make no changes to the database
-		SimpleDatabase db = new SimpleDatabase(this, "simple_db", 3);
-		db.addTable(table);
+		SimpleDatabase db = new SimpleDatabase(this, "simple_db", 1);
+
+		// Create a sample table and add a column to it.
+		db.addTable("sample_table").addColumn("id", SimpleDatatable.INTEGER);
 
 		// Lets try doing an insert operation on our new table. First we prepare
 		// the table for insert by calling table.prepareInsert with the required
@@ -172,6 +171,7 @@ public class MainActivity extends ActionBarActivity {
 		// that will handle what we do with the results of the query execution.
 		for (int i = 0; i < 5; i++) {
 			try {
+				SimpleDatatable table = db.getTable("SAMPLE_TABLE");
 				table.prepareInsert(new String[] { "id" },
 						new String[] { "" + i }).execute(new QueryListener() {
 
@@ -187,6 +187,8 @@ public class MainActivity extends ActionBarActivity {
 				e.printStackTrace();
 			} catch (CannotPreparException e) {
 				e.printStackTrace();
+			} catch (TableNotFoundException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -194,10 +196,12 @@ public class MainActivity extends ActionBarActivity {
 		// by calling execute without preparing the table and omitting a valid
 		// callback function.
 		try {
-			table.execute(null);
+			db.getTable("SAMPLE_TABLE").execute(null);
 		} catch (NotPreparedException e) {
 			e.printStackTrace();
 		} catch (NoDatabaseException e) {
+			e.printStackTrace();
+		} catch (TableNotFoundException e) {
 			e.printStackTrace();
 		}
 
@@ -205,28 +209,29 @@ public class MainActivity extends ActionBarActivity {
 		// a select. This is done just like the insert with us providing a
 		// callback and making a prepare call on the table before execution.
 		try {
-			table.prepareSelect().execute(new QueryListener() {
+			db.getTable("SAMPLE_TABLE").prepareSelect()
+					.execute(new QueryListener() {
+						@Override
+						public void onResult(QueryResult result) {
+							Log.d("MainApp", result.getMessage());
+							Cursor c = result.getCursor();
 
-				@Override
-				public void onResult(QueryResult result) {
-					Log.d("MainApp", result.getMessage());
-					Cursor c = result.getCursor();
-
-					c.moveToFirst();
-					while (true) {
-						System.out.println(c.getString(0));
-						if (c.isLast())
-							break;
-						c.moveToNext();
-					}
-				}
-
-			});
+							c.moveToFirst();
+							while (true) {
+								System.out.println(c.getString(0));
+								if (c.isLast())
+									break;
+								c.moveToNext();
+							}
+						}
+					});
 		} catch (NotPreparedException e) {
 			e.printStackTrace();
 		} catch (NoDatabaseException e) {
 			e.printStackTrace();
 		} catch (CannotPreparException e) {
+			e.printStackTrace();
+		} catch (TableNotFoundException e) {
 			e.printStackTrace();
 		}
 	}

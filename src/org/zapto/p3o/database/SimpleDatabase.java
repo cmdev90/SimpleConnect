@@ -1,15 +1,17 @@
 package org.zapto.p3o.database;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Set;
 
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-public class SimpleDatabase implements DatabaseHelper.DatabaseListener{
+public class SimpleDatabase implements DatabaseHelper.DatabaseListener {
 
-	private List<SimpleDatatable> tables = new ArrayList<SimpleDatatable>();
+	private HashMap<String, SimpleDatatable> tables = new HashMap<String, SimpleDatatable>();
 	private Context context;
 	private String databasename;
 	private int version;
@@ -21,22 +23,28 @@ public class SimpleDatabase implements DatabaseHelper.DatabaseListener{
 		this.setDatabasename(databasename);
 		this.setVersion(version);
 
-		this.mdbHelper = new DatabaseHelper(context, databasename, version, this);
+		this.mdbHelper = new DatabaseHelper(context, databasename, version,
+				this);
 	}
 
-	public boolean addTable(SimpleDatatable table) {
-		if (this.tables.add(table)) {
-			table.setSQLiteDatabase(mdbHelper);
-			return true;
-		}
-		return false;
+	public SimpleDatatable addTable(String tablename) {
+		String name = tablename.toLowerCase(Locale.getDefault());
+		SimpleDatatable table = new SimpleDatatable(name);
+		this.tables.put(name, table);
+		table.setSQLiteDatabase(mdbHelper);
+		return table;
 	}
 
-	public boolean removeTable(SimpleDatatable table){
-		if (this.tables.remove(table)) {
-			return true;
-		}
-		return false;
+	public SimpleDatatable getTable(String tablename) throws TableNotFoundException{
+		String name = tablename.toLowerCase(Locale.getDefault());
+		SimpleDatatable t = tables.get(name);
+		if (t != null)
+			return t;
+		
+		throw new TableNotFoundException();
+	}
+	public void removeTable(String tablename) {
+		this.tables.remove(tablename);
 	}
 
 	public int getVersion() {
@@ -65,25 +73,33 @@ public class SimpleDatabase implements DatabaseHelper.DatabaseListener{
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		for (SimpleDatatable table : this.tables){
+		Set<String> keys = tables.keySet();
+		
+		Iterator<String> i = keys.iterator();
+		while (i.hasNext()){
+			SimpleDatatable t = tables.get(i.next());
 			try {
-				db.execSQL(table.createTable());
+				db.execSQL(t.createTable());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} catch (InvalidTableException e) {
 				e.printStackTrace();
-			}
+			}			
 		}
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		for (SimpleDatatable table : this.tables){
+		Set<String> keys = tables.keySet();
+		
+		Iterator<String> i = keys.iterator();
+		while (i.hasNext()){
+			SimpleDatatable t = tables.get(i.next());
 			try {
-				db.execSQL(table.dropTable());
+				db.execSQL(t.dropTable());
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
+			}			
 		}
 		onCreate(db);
 	}
