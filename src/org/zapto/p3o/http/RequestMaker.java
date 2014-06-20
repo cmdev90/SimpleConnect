@@ -18,12 +18,15 @@ public class RequestMaker {
 
 	public RequestMaker(Context context) {
 		this.context = context;
-	}
-
-	public void get(String uri, HttpResponder callback) {
+		
 		// If no network is avaiable prompt the user to connect to one.
 		if (!isNetworkAvailable())
 			createNetErrorDialog();
+	}
+
+	public void get(String uri, HttpResponder callback) throws ConnectionErrorException {
+		if (!isNetworkAvailable())
+			throw new ConnectionErrorException();
 		
 		// First thing we need to do is create a new AsyncTask to handle the
 		// call.

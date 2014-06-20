@@ -34,12 +34,7 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 
 		this.testDatabase();
-
-		try {
-			this.testHttp();
-		} catch (ConnectionErrorException e) {
-			e.printStackTrace();
-		}
+		this.testHttp();
 	}
 
 	@Override
@@ -79,7 +74,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
-	protected void testHttp() throws ConnectionErrorException {
+	protected void testHttp() {
 		final TextView tvGet = (TextView) findViewById(R.id.tvGet);
 		final TextView tvPut = (TextView) findViewById(R.id.tvPut);
 		final TextView tvPost = (TextView) findViewById(R.id.tvPost);
@@ -95,60 +90,66 @@ public class MainActivity extends ActionBarActivity {
 		// available to ensure connectivity.
 		RequestMaker http = new RequestMaker(this);
 
-		http.get("http://192.168.254.34:2000", new HttpResponder() {
+		try {
+			http.get("http://192.168.254.34:2000", new HttpResponder() {
 
-			@Override
-			public void onHttpResponse(ServerResponse httpResponse) {
-				if (httpResponse != null) {
-					Log.d("MainApp", httpResponse.getMessage());
-					tvGet.setText(httpResponse.getContent());
-					progress.dismiss();
+				@Override
+				public void onHttpResponse(ServerResponse httpResponse) {
+					if (httpResponse != null) {
+						Log.d("MainApp", httpResponse.getMessage());
+						tvGet.setText(httpResponse.getContent());
+						progress.dismiss();
+					}
 				}
-			}
 
-		});
-
-		http.put("http://192.168.254.34:2000",
-				"{\"barcode\":\"nu893htn90wehn089w4444q5\"}",
-				new HttpResponder() {
-
-					@Override
-					public void onHttpResponse(ServerResponse httpResponse) {
-						if (httpResponse != null) {
-							Log.d("MainApp", httpResponse.getMessage());
-							tvPut.setText(httpResponse.getContent());
-							progress.dismiss();
+			});
+	
+			http.put("http://192.168.254.34:2000",
+					"{\"barcode\":\"nu893htn90wehn089w4444q5\"}",
+					new HttpResponder() {
+	
+						@Override
+						public void onHttpResponse(ServerResponse httpResponse) {
+							if (httpResponse != null) {
+								Log.d("MainApp", httpResponse.getMessage());
+								tvPut.setText(httpResponse.getContent());
+								progress.dismiss();
+							}
 						}
-					}
-
-				});
-
-		http.post("http://192.168.254.34:2000",
-				"{\"barcode\":\"nu893htn90wehn089w4444q5\"}",
-				new HttpResponder() {
-
-					@Override
-					public void onHttpResponse(ServerResponse httpResponse) {
-						if (httpResponse != null) {
-							Log.d("MainApp", httpResponse.getMessage());
-							tvPost.setText(httpResponse.getContent());
+	
+					});
+	
+			http.post("http://192.168.254.34:2000",
+					"{\"barcode\":\"nu893htn90wehn089w4444q5\"}",
+					new HttpResponder() {
+	
+						@Override
+						public void onHttpResponse(ServerResponse httpResponse) {
+							if (httpResponse != null) {
+								Log.d("MainApp", httpResponse.getMessage());
+								tvPost.setText(httpResponse.getContent());
+							}
 						}
-					}
-
-				});
-
-		http.delete("http://192.168.254.34:2000/an_object",
-				new HttpResponder() {
-
-					@Override
-					public void onHttpResponse(ServerResponse httpResponse) {
-						if (httpResponse != null) {
-							Log.d("MainApp", httpResponse.getMessage());
-							tvDelete.setText(httpResponse.getContent());
+	
+					});
+	
+			http.delete("http://192.168.254.34:2000/an_object",
+					new HttpResponder() {
+	
+						@Override
+						public void onHttpResponse(ServerResponse httpResponse) {
+							if (httpResponse != null) {
+								Log.d("MainApp", httpResponse.getMessage());
+								tvDelete.setText(httpResponse.getContent());
+							}
 						}
-					}
+	
+					});
+		} catch (ConnectionErrorException e) {
+			e.printStackTrace();
+			progress.dismiss();
+		}
 
-				});
 	}
 
 	/**
