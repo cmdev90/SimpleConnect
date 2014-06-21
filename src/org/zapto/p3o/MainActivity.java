@@ -5,7 +5,6 @@ import org.zapto.p3o.database.NoDatabaseException;
 import org.zapto.p3o.database.NotPreparedException;
 import org.zapto.p3o.database.QueryListener;
 import org.zapto.p3o.database.QueryResult;
-import org.zapto.p3o.database.SimpleDatabase;
 import org.zapto.p3o.database.SimpleDatatable;
 import org.zapto.p3o.database.TableNotFoundException;
 import org.zapto.p3o.http.ConnectionErrorException;
@@ -161,10 +160,7 @@ public class MainActivity extends ActionBarActivity {
 
 		// Create a new database and add the created table to it. If the
 		// database already exist these calls make no changes to the database
-		SimpleDatabase db = new SimpleDatabase(this, "simple_db", 1);
-
-		// Create a sample table and add a column to it.
-		db.addTable("sample_table").addColumn("id", SimpleDatatable.INTEGER);
+		TestDatabase db = new TestDatabase(this);
 
 		// Lets try doing an insert operation on our new table. First we prepare
 		// the table for insert by calling table.prepareInsert with the required

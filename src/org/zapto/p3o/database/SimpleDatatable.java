@@ -35,6 +35,13 @@ public class SimpleDatatable {
 		this.columns = new HashMap<String, String>();
 	}
 
+	public SimpleDatatable(String tablename,Class<?> mClass) {
+		this.tablename = tablename;
+		
+		
+		
+	}
+
 	public void addColumn(String colname, String type) {
 		this.columns.put(colname, type);
 	}

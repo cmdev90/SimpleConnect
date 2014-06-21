@@ -1,5 +1,6 @@
 package org.zapto.p3o.database;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -9,7 +10,7 @@ import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-public class SimpleDatabase implements DatabaseHelper.DatabaseListener {
+public abstract class SimpleDatabase implements DatabaseHelper.DatabaseListener {
 
 	private HashMap<String, SimpleDatatable> tables = new HashMap<String, SimpleDatatable>();
 	private Context context;
@@ -25,11 +26,27 @@ public class SimpleDatabase implements DatabaseHelper.DatabaseListener {
 
 		this.mdbHelper = new DatabaseHelper(context, databasename, version,
 				this);
+		
+		// call the defineDatabase method that will ready this object.
+		defineDatabase();
 	}
+	
+	/**
+	 * Override this method, defining the classes and tables used within this database.
+	 */
+	public abstract void defineDatabase(); 
 
 	public SimpleDatatable addTable(String tablename) {
 		String name = tablename.toLowerCase(Locale.getDefault());
 		SimpleDatatable table = new SimpleDatatable(name);
+		this.tables.put(name, table);
+		table.setSQLiteDatabase(mdbHelper);
+		return table;
+	}
+	
+	public SimpleDatatable addTable(Class<?> mClass){
+		String name = mClass.getSimpleName();
+		SimpleDatatable table = new SimpleDatatable(name, mClass);
 		this.tables.put(name, table);
 		table.setSQLiteDatabase(mdbHelper);
 		return table;
@@ -43,6 +60,7 @@ public class SimpleDatabase implements DatabaseHelper.DatabaseListener {
 		
 		throw new TableNotFoundException();
 	}
+	
 	public void removeTable(String tablename) {
 		this.tables.remove(tablename);
 	}
