@@ -96,25 +96,24 @@ public class SimpleDatatable {
 		return createStatement + ";"; // always terminate the SQL.
 	}
 
-	protected String dropTable() {
+	protected String drop() {
 		return "DROP TABLE IF EXISTS " + this.tablename;
 	}
 
-	public SimpleDatatable prepareSelect() throws CannotPreparException {
-		return this.prepareSelect(null, null);
+	public SimpleDatatable select() throws CannotPreparException {
+		return this.select(null);
 	}
-
-	public SimpleDatatable prepareSelect(String condition)
-			throws CannotPreparException {
-		return this.prepareSelect(null, condition);
+	
+	public SimpleDatatable where(String condition){
+		// If there is a condition then add the Where clause.
+		if (condition != null && !condition.equalsIgnoreCase("")) {
+			this.preparedQuery += " WHERE " + condition;
+		}
+		
+		return this;
 	}
-
-	public SimpleDatatable prepareSelect(String[] cols)
-			throws CannotPreparException {
-		return this.prepareSelect(cols, null);
-	}
-
-	public SimpleDatatable prepareSelect(String[] cols, String condition)
+	
+	public SimpleDatatable select(String[] cols)
 			throws CannotPreparException {
 
 		// Start the select statement.
@@ -135,17 +134,12 @@ public class SimpleDatatable {
 		// Add the table select part of the clause
 		this.preparedQuery += " FROM " + this.tablename;
 
-		// If there is a condition then add the Where clause.
-		if (condition != null && !condition.equalsIgnoreCase("")) {
-			this.preparedQuery += " WHERE " + condition;
-		}
-
 		// Set the table object ready to execute a select.
 		executeStatus = SimpleQuery.EXECUTE_SELECT;
 		return this;
 	}
 
-	public SimpleDatatable prepareInsert(String[] cols, String[] values)
+	public SimpleDatatable insert(String[] cols, String[] values)
 			throws CannotPreparException {
 		preparedContent = new ContentValues();
 
@@ -162,7 +156,7 @@ public class SimpleDatatable {
 		return this;
 	}
 
-	public SimpleDatatable prepareUpdate(String[] cols, String[] values)
+	public SimpleDatatable update(String[] cols, String[] values)
 			throws CannotPreparException {
 		preparedContent = new ContentValues();
 
@@ -179,15 +173,11 @@ public class SimpleDatatable {
 		return this;
 	}
 
-	public SimpleDatatable prepareDelete(String whereClause) {
-		this.preparedQuery = whereClause;
+	public SimpleDatatable delete() {
 		this.executeStatus = SimpleQuery.EXECUTE_DELETE;
 		return this;
 	}
 
-	public SimpleDatatable prepareDelete() {
-		return this.prepareDelete(null);
-	}
 
 	public void execute(QueryListener listener) throws NotPreparedException,
 			NoDatabaseException {

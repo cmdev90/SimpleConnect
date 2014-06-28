@@ -15,7 +15,7 @@ public class TestDatabase extends SimpleDatabase {
 	}
 
 	@Override
-	public void defineDatabase() {
+	public void onCreate() {
 		// Create a sample table and add a column to it.
 		this.addTable("sample_table").addColumn("id", SimpleDatatable.INTEGER);
 	}

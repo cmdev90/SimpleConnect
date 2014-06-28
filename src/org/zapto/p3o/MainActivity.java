@@ -102,11 +102,11 @@ public class MainActivity extends ActionBarActivity {
 				}
 
 			});
-	
+
 			http.put("http://192.168.254.34:2000",
 					"{\"barcode\":\"nu893htn90wehn089w4444q5\"}",
 					new HttpResponder() {
-	
+
 						@Override
 						public void onHttpResponse(ServerResponse httpResponse) {
 							if (httpResponse != null) {
@@ -115,13 +115,13 @@ public class MainActivity extends ActionBarActivity {
 								progress.dismiss();
 							}
 						}
-	
+
 					});
-	
+
 			http.post("http://192.168.254.34:2000",
 					"{\"barcode\":\"nu893htn90wehn089w4444q5\"}",
 					new HttpResponder() {
-	
+
 						@Override
 						public void onHttpResponse(ServerResponse httpResponse) {
 							if (httpResponse != null) {
@@ -129,12 +129,12 @@ public class MainActivity extends ActionBarActivity {
 								tvPost.setText(httpResponse.getContent());
 							}
 						}
-	
+
 					});
-	
+
 			http.delete("http://192.168.254.34:2000/an_object",
 					new HttpResponder() {
-	
+
 						@Override
 						public void onHttpResponse(ServerResponse httpResponse) {
 							if (httpResponse != null) {
@@ -142,7 +142,7 @@ public class MainActivity extends ActionBarActivity {
 								tvDelete.setText(httpResponse.getContent());
 							}
 						}
-	
+
 					});
 		} catch (ConnectionErrorException e) {
 			e.printStackTrace();
@@ -168,16 +168,16 @@ public class MainActivity extends ActionBarActivity {
 		// that will handle what we do with the results of the query execution.
 		for (int i = 0; i < 5; i++) {
 			try {
-				SimpleDatatable table = db.getTable("SAMPLE_TABLE");
-				table.prepareInsert(new String[] { "id" },
-						new String[] { "" + i }).execute(new QueryListener() {
+				SimpleDatatable table = db.from("SAMPLE_TABLE");
+				table.insert(new String[] { "id" }, new String[] { "" + i })
+						.execute(new QueryListener() {
 
-					@Override
-					public void onResult(QueryResult result) {
-						Log.d("MainApp", result.getMessage());
-					}
+							@Override
+							public void onResult(QueryResult result) {
+								Log.d("MainApp", result.getMessage());
+							}
 
-				});
+						});
 			} catch (NotPreparedException e) {
 				e.printStackTrace();
 			} catch (NoDatabaseException e) {
@@ -189,11 +189,39 @@ public class MainActivity extends ActionBarActivity {
 			}
 		}
 
+		try {
+			db.from("SAMPLE_TABLE").select().where("id=2")
+					.execute(new QueryListener() {
+
+						@Override
+						public void onResult(QueryResult result) {
+							Log.d("MainApp", result.getMessage());
+							Cursor c = result.getCursor();
+							c.moveToFirst();
+							while (true) {
+								System.out.println(c.getString(0));
+								if (c.isLast())
+									break;
+								c.moveToNext();
+							}
+						}
+
+					});
+		} catch (CannotPreparException e1) {
+			e1.printStackTrace();
+		} catch (TableNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (NotPreparedException e) {
+			e.printStackTrace();
+		} catch (NoDatabaseException e) {
+			e.printStackTrace();
+		}
+
 		// Lets test to see how errors are presented and handled in the library
 		// by calling execute without preparing the table and omitting a valid
 		// callback function.
 		try {
-			db.getTable("SAMPLE_TABLE").execute(null);
+			db.from("SAMPLE_TABLE").execute(null);
 		} catch (NotPreparedException e) {
 			e.printStackTrace();
 		} catch (NoDatabaseException e) {
@@ -206,22 +234,21 @@ public class MainActivity extends ActionBarActivity {
 		// a select. This is done just like the insert with us providing a
 		// callback and making a prepare call on the table before execution.
 		try {
-			db.getTable("SAMPLE_TABLE").prepareSelect()
-					.execute(new QueryListener() {
-						@Override
-						public void onResult(QueryResult result) {
-							Log.d("MainApp", result.getMessage());
-							Cursor c = result.getCursor();
+			db.from("SAMPLE_TABLE").select().execute(new QueryListener() {
+				@Override
+				public void onResult(QueryResult result) {
+					Log.d("MainApp", result.getMessage());
+					Cursor c = result.getCursor();
 
-							c.moveToFirst();
-							while (true) {
-								System.out.println(c.getString(0));
-								if (c.isLast())
-									break;
-								c.moveToNext();
-							}
-						}
-					});
+					c.moveToFirst();
+					while (true) {
+						System.out.println(c.getString(0));
+						if (c.isLast())
+							break;
+						c.moveToNext();
+					}
+				}
+			});
 		} catch (NotPreparedException e) {
 			e.printStackTrace();
 		} catch (NoDatabaseException e) {

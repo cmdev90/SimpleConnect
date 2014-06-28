@@ -1,6 +1,5 @@
 package org.zapto.p3o.database;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -28,13 +27,13 @@ public abstract class SimpleDatabase implements DatabaseHelper.DatabaseListener 
 				this);
 		
 		// call the defineDatabase method that will ready this object.
-		defineDatabase();
+		onCreate();
 	}
 	
 	/**
 	 * Override this method, defining the classes and tables used within this database.
 	 */
-	public abstract void defineDatabase(); 
+	public abstract void onCreate(); 
 
 	public SimpleDatatable addTable(String tablename) {
 		String name = tablename.toLowerCase(Locale.getDefault());
@@ -52,7 +51,7 @@ public abstract class SimpleDatabase implements DatabaseHelper.DatabaseListener 
 		return table;
 	}
 
-	public SimpleDatatable getTable(String tablename) throws TableNotFoundException{
+	public SimpleDatatable from(String tablename) throws TableNotFoundException{
 		String name = tablename.toLowerCase(Locale.getDefault());
 		SimpleDatatable t = tables.get(name);
 		if (t != null)
@@ -114,7 +113,7 @@ public abstract class SimpleDatabase implements DatabaseHelper.DatabaseListener 
 		while (i.hasNext()){
 			SimpleDatatable t = tables.get(i.next());
 			try {
-				db.execSQL(t.dropTable());
+				db.execSQL(t.drop());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}			
