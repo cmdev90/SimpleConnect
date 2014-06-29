@@ -1,7 +1,7 @@
 #SimpleConnect
 
 ###About
-The **SimpleConnect** library is a set of convinence libraries for performing asynchronous task, such as Http and Database calls, in Android.
+The **SimpleConnect** library is a set of convinence packages for performing asynchronous task, such as http and database calls, in Android.
 
 
 ###Getting Started
