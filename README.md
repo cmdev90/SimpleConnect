@@ -35,7 +35,7 @@ http.get("http://www.example.com", new HttpResponder() {
 
 ```
 
-**Hint: The HttpReponder can be passed as `null` if you wish not to handle the response.*
+*Hint: The HttpReponder can be passed as `null` if you wish not to handle the response.*
 
 The HttpResponder is your callback function that receives the http response. This object has one method that you must implement to handled to the server reponse. This reponse is wrapped in a `ServerReponse` object which has methods you can use to retrieve the server status codes, message and response content.
 ```java
@@ -45,9 +45,9 @@ The HttpResponder is your callback function that receives the http response. Thi
     }
 ```
 
-**Hint:  Any Android error, such as WiFi connection errors, will throw an ``AndroidErrorException``. Be sure to handle any exception that might be thrown using try-catch statements.*
+*Hint:  Any Android error, such as WiFi connection errors, will throw an ``AndroidErrorException``. Be sure to handle any exception that might be thrown using try-catch statements.*
 
-**Hint: The http response body must only contatin string data as the ServerResponse object is only able to replicate string type data (i.e. sending html, xml, or json should work as expected.*
+*Hint: The http response body must only contatin string data as the ServerResponse object is only able to replicate string type data (i.e. sending html, xml, or json should work as expected.*
 
 
 ---
@@ -58,7 +58,7 @@ http.get("http://www.example.com", "{\"key\":\"value\"}" , new HttpResponder() {
     ...
 });
 ```
-**Hint: This library only supports put and post request to json consuming servers. The http content type is set to appliction/json by default and cannot be changed as of this version.*
+*Hint: This library only supports put and post request to json consuming servers. The http content type is set to appliction/json by default and cannot be changed as of this version.*
 
 ---
 ###Making a HTTP DELETE Request
