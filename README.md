@@ -32,7 +32,11 @@ Usimg the ``http`` object created earlier you can perform a http ``get`` request
 http.get("http://www.example.com", new HttpResponder() {
     ...
 });
+
 ```
+
+**Hint: The HttpReponder can be passed as `null` if you wish not to handle the response.*
+
 The HttpResponder is your callback function that receives the http response. This object has one method that you must implement to handled to the server reponse. This reponse is wrapped in a `ServerReponse` object which has methods you can use to retrieve the server status codes, message and response content.
 ```java
     @Override
@@ -45,8 +49,9 @@ The HttpResponder is your callback function that receives the http response. Thi
 
 **Hint: The http response body must only contatin string data as the ServerResponse object is only able to replicate string type data (i.e. sending html, xml, or json should work as expected.*
 
+
 ---
-###Making a HTTP POST/PUT Request  
+##Making a HTTP POST/PUT Request  
 When making a `post/put` request you use the respective method of the resquest object. The first parameter is the url, the second parameter is a ``json`` string describing the request body and the finial parameter is the ``HttpResponder`` as shown below:
 ```java
 http.get("http://www.example.com", "{\"key\":\"value\"}" , new HttpResponder() {
@@ -57,5 +62,17 @@ http.get("http://www.example.com", "{\"key\":\"value\"}" , new HttpResponder() {
 
 ---
 ###Making a HTTP DELETE Request
+The `delete` request works by calling the delete method on the `RequestMaker` object, passing the url as the first parameter and a `HttpResponder` as the second paramter as shown:
 
+```java
+http.delete("http://www.example.com", new HttpResponder() {
+    ...
+});
 
+```
+Alternativly, you can pass a json string as the second parameter and the HttpResponder as a third if you wish to pass some data to the server. See below:
+```java
+http.delete("http://www.example.com", "{\"key\":\"value\"}" , new HttpResponder() {
+    ...
+});
+```
