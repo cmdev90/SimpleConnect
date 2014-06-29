@@ -72,9 +72,9 @@ public class Request extends AsyncTask<String, Integer, ServerResponse> {
 	private ServerResponse doDeleteRequest(String uri) {
 		try {
 			URL url = new URL(uri);
-			HttpDelete httpPost = new HttpDelete(url.toString());
+			HttpDelete httpDelete = new HttpDelete(url.toString());
 			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpResponse response = httpClient.execute(httpPost);
+			HttpResponse response = httpClient.execute(httpDelete);
 
 			return new ServerResponse(response);
 
@@ -132,8 +132,8 @@ public class Request extends AsyncTask<String, Integer, ServerResponse> {
 
 	@Override
 	protected void onPostExecute(ServerResponse result) {
-		// if (result instanceof ServerResponse)
-		this.handler.onHttpResponse((ServerResponse) result);
+		if (this.handler != null)
+			this.handler.onHttpResponse((ServerResponse) result);
 		// else if (result instanceof AndroidResponse)
 		// this.handler.onAndroidResponse((AndroidResponse) result);
 	}

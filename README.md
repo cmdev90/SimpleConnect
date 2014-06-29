@@ -70,9 +70,4 @@ http.delete("http://www.example.com", new HttpResponder() {
 });
 
 ```
-Alternativly, you can pass a json string as the second parameter and the HttpResponder as a third if you wish to pass some data to the server. See below:
-```java
-http.delete("http://www.example.com", "{\"key\":\"value\"}" , new HttpResponder() {
-    ...
-});
-```
+*Hint: The library puts RESTful conventions first which is why you don't get to pass parameters to the server the way put and post allows.* 
