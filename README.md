@@ -47,7 +47,7 @@ The HttpResponder is your callback function that receives the http response. Thi
 
 *_Hint:  Any Android error, such as WiFi connection errors, will throw an ``AndroidErrorException``. Be sure to handle any exception that might be thrown using try-catch statements._*
 
-**_Hint: The http response body must only contatin string data as the ServerResponse object is only able to replicate string type data_ (i.e. sending html, xml, or json should work as expected.)**
+**Hint: The http response body must only contatin string data as the ServerResponse object is only able to replicate string type data _(i.e. sending html, xml, or json should work as expected.)_**
 
 
 ---
