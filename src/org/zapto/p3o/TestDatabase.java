@@ -8,7 +8,7 @@ import android.content.Context;
 public class TestDatabase extends SimpleDatabase {
 	
 	public static String DATABASE = "simple_db";
-	public static int VERSION = 2;
+	public static int VERSION = 4;
 	
 	public TestDatabase(Context context) {
 		super(context, DATABASE, VERSION);

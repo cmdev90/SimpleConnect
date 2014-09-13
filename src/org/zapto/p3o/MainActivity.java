@@ -90,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
 		RequestMaker http = new RequestMaker(this);
 
 		try {
-			http.get("http://192.168.0.106:2000", new HttpResponder() {
+			http.get("http://10.0.0.101:2000", new HttpResponder() {
 
 				@Override
 				public void onHttpResponse(ServerResponse httpResponse) {
@@ -103,7 +103,7 @@ public class MainActivity extends ActionBarActivity {
 
 			});
 
-			http.put("http://192.168.0.106:2000",
+			http.put("http://10.0.0.101:2000",
 					"{\"barcode\":\"nu893htn90wehn089w4444q5\"}",
 					new HttpResponder() {
 
@@ -118,7 +118,7 @@ public class MainActivity extends ActionBarActivity {
 
 					});
 
-			http.post("http://192.168.0.106:2000",
+			http.post("http://10.0.0.101:2000",
 					"{\"barcode\":\"nu893htn90wehn089w4444q5\"}",
 					new HttpResponder() {
 
@@ -132,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
 
 					});
 
-			http.delete("http://192.168.0.106:2000/an_object",
+			http.delete("http://10.0.0.101:2000/an_object",
 					new HttpResponder() {
 
 						@Override
