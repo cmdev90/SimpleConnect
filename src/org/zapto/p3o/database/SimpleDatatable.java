@@ -42,8 +42,9 @@ public class SimpleDatatable {
 		
 	}
 
-	public void addColumn(String colname, String type) {
+	public SimpleDatatable addColumn(String colname, String type) {
 		this.columns.put(colname, type);
+		return this;
 	}
 
 	public HashMap<String, String> getColumns() {
