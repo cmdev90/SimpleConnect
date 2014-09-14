@@ -7,13 +7,17 @@ import org.zapto.p3o.database.QueryListener;
 import org.zapto.p3o.database.QueryResult;
 import org.zapto.p3o.database.SimpleDatatable;
 import org.zapto.p3o.database.TableNotFoundException;
+import org.zapto.p3o.gps.SimpleGPS;
+import org.zapto.p3o.gps.SimpleGPS.GPSListener;
 import org.zapto.p3o.http.ConnectionErrorException;
 import org.zapto.p3o.http.HttpResponder;
 import org.zapto.p3o.http.RequestMaker;
 import org.zapto.p3o.http.ServerResponse;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -34,6 +38,52 @@ public class MainActivity extends ActionBarActivity {
 
 		this.testDatabase();
 		this.testHttp();
+		
+		final Context context = this;
+		
+		SimpleGPS gps = new SimpleGPS(this);
+		gps.getGPS(1000, new GPSListener(){
+
+			@Override
+			public void onLocationFound(Location location) {
+				Log.i("GPS readings", location.getLatitude() + " " + location.getLongitude());
+				GPSDatabase db = new GPSDatabase(context);
+				
+				try {
+					SimpleDatatable table = db.from("GPS_TABLE");
+					table.insert(
+								new String[] { "lat", "lng" },
+								new String[] { Double.toString(location.getLatitude()), Double.toString(location.getLongitude()) }
+							).execute(new QueryListener() {
+								@Override
+								public void onResult(QueryResult result) {
+									Log.d("MainApp", result.getMessage());
+								}
+							});
+				} catch (NotPreparedException e) {
+					e.printStackTrace();
+				} catch (NoDatabaseException e) {
+					e.printStackTrace();
+				} catch (CannotPreparException e) {
+					e.printStackTrace();
+				} catch (TableNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void onLocationTimeOut() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void cancelLocationListener() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 	}
 
 	@Override
