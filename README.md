@@ -1,17 +1,17 @@
-#SimpleConnect
+# SimpleConnect
 
-###About
+### About
 The **SimpleConnect** library is a set of convinence packages for performing asynchronous task, such as http and database calls, in Android.
 
 
-###Getting Started
+### Getting Started
 To get started download the `http-connect.jar` file from the project root directory and add it to build path and boom! Now you should be able to simple connect to the various android services supported in this library.
 
 ---
 
 HTTPConnect
 ---
-###Createing a new Request Object
+### Createing a new Request Object
 
 To get started making a HTTP request you create a new `RequestMaker` object. The object requires an application context so it must be called from an Android activity type class.
 
@@ -25,7 +25,7 @@ Now that you have a request object, are now free to make `get`, `put`, `post` an
 
 ---
 
-###Making a HTTP GET Request  
+### Making a HTTP GET Request  
 Usimg the ``http`` object created earlier you can perform a http ``get`` request to any url by invoking the get method of the http object and passing as the first parameter the url u wish to get from, and a new ``HttpResponder`` object that can be passed anonymously as shown below:
 
 ```java
@@ -51,7 +51,7 @@ The HttpResponder is your callback function that receives the http response. Thi
 
 
 ---
-###Making a HTTP POST/PUT Request  
+### Making a HTTP POST/PUT Request  
 When making a `post/put` request you use the respective method of the resquest object. The first parameter is the url, the second parameter is a ``json`` string describing the request body and the finial parameter is the ``HttpResponder`` as shown below:
 ```java
 http.get("http://www.example.com", "{\"key\":\"value\"}" , new HttpResponder() {
@@ -61,7 +61,7 @@ http.get("http://www.example.com", "{\"key\":\"value\"}" , new HttpResponder() {
 *Hint: This library only supports put and post request to json consuming servers. The http content type is set to appliction/json by default and cannot be changed as of this version.*
 
 ---
-###Making a HTTP DELETE Request
+### Making a HTTP DELETE Request
 The `delete` request works by calling the delete method on the `RequestMaker` object, passing the url as the first parameter and a `HttpResponder` as the second paramter as shown:
 
 ```java
